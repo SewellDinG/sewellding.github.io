@@ -1,0 +1,55 @@
+
+# SEO settings
+title: "SewellDinG"
+title2: "老锥" 
+description: ""
+keywords: ""
+url: https://ai-sewell.me # site url
+baseurl: "" # apply repo name if use it under gh-pages branch
+# baseurl: null # apply null if repo name is something like username.github.io
+
+# google_analytics: "xxxx"
+# disqus_shortname: "yyyy"
+twitter_username: "老锥不老"
+comments: false
+
+# Build settings
+permalink   : /:year/:title/
+markdown    : kramdown
+highlighter : rouge
+
+source: ./
+destination: ./_site
+
+# Sass configuration
+sass:
+  sass_dir: assets/scss
+  style: compressed # expanded
+
+# Author settings
+author:
+  name     : "老锥"
+  footer   : "菜的不要不要的了╥﹏╥"
+  job      : "XDU"
+  bio      : ""
+  thumb    : /images/author.png
+  email    : bigder.ding@gmail.com
+  url      : https://ai-sewell.me
+  github   : https://github.com/SewellDinG
+  twitter  : https://twitter.com/SewellDinG
+
+# social settings
+og_locale: "en_US"
+twitter_card: "summary_large_image"
+twitter_site: "@SewellDinG"
+
+plugins:
+  - bourbon
+  - jekyll-paginate
+
+# navbar pages
+navbar:
+  - slug : about
+    title: About
+
+exclude: ["gulp", "node_modules", "bower", "bower_components", "config.rb", "src", "Gemfile", "Gemfile.lock", ".rvmrc", ".rbenv-version", "package.json", "gulpfile.js", "README.md", "Rakefile", "changelog.md"]
