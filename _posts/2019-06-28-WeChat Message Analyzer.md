@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Dynamic debugging with PHPStorm+MAMP on Mac
+title: WeChat Message Analyzer
 description: ""
 keywords: "Sword"
 ---
