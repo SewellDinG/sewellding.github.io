@@ -7,6 +7,8 @@ keywords: "Sword"
 
 # WeChat Message Analyzer
 
+Github：[https://github.com/SewellDinG/WeChatMessageAnalyzer](https://github.com/SewellDinG/WeChatMessageAnalyzer)
+
 目的：微信群组敏感信息行为记录、分析、取证、预警、可视化。
 
 原理：使用[ItChat](https://github.com/littlecodersh/ItChat)编写微信机器人，将机器人账号伪装并添加至待监测群组，实时记录聊天内容；使用基于[Trie Tre](https://github.com/liu-nlper/KeywordProcesser)的关键字匹配实时分析威胁言论；使用ELK（Elasticsearch、Logstash、Kibana）取证并可视化预警。
