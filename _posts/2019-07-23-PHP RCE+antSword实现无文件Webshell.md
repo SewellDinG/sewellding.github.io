@@ -23,7 +23,7 @@ keywords: ""
 
 这里仍拿ThinkPHP来演示：在index.php文件后加上如下代码。
 
-NOTE that PHP>7.1 assert被定义为一种语言构造器，而不是一个函数，所以像eval一样不支持可变函数（如果一个变量名后有圆括号，PHP 将寻找与变量的值同名的函数，并且尝试执行它），即以下代码调用不可用。
+NOTE that PHP>7.1 assert被定义为一种语言构造器，而不是一个函数，所以像eval一样不支持被可变函数（如果一个变量名后有圆括号，PHP 将寻找与变量的值同名的函数，并且尝试执行它）调用，即以下代码调用不可用。
 
 ![PHPWebshell1](/assets/images/2019-07-23/PHPWebshell1.png)
 
