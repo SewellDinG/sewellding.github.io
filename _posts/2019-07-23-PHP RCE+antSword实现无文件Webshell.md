@@ -23,16 +23,22 @@ keywords: ""
 
 这里仍拿ThinkPHP来演示：在index.php文件后加上如下代码。
 
+NOTE that PHP>7.1 assert被定义为一种语言构造器，而不是一个函数，所以像eval一样不支持可变函数（如果一个变量名后有圆括号，PHP 将寻找与变量的值同名的函数，并且尝试执行它），即以下代码调用不可用。
+
 ![PHPWebshell1](/assets/images/2019-07-23/PHPWebshell1.png)
 
-利用antSword的编解码功能“加密”传输流量，这里使用随机截取一位base64编码器。
+实现：
 
 ![PHPWebshell2](/assets/images/2019-07-23/PHPWebshell2.png)
 
-![PHPWebshell3](/assets/images/2019-07-23/PHPWebshell3.png)
+再利用antSword的编解码功能“加密”传输流量，这里使用随机截取一位base64编码器。
 
-完美实现Webshell功能，使用Wireshark抓取流量可以发现传输的关键数据被base64编码。
+![PHPWebshell3](/assets/images/2019-07-23/PHPWebshell3.png)
 
 ![PHPWebshell4](/assets/images/2019-07-23/PHPWebshell4.png)
 
-构造PHP RCE的方式灵活多样，可以肆意发挥。
+完美实现Webshell功能，使用Wireshark抓取流量可以发现传输的关键数据被base64编码。
+
+![PHPWebshell5](/assets/images/2019-07-23/PHPWebshell5.png)
+
+构造PHP RCE的方式灵活多样，可以肆意发挥，但前提需要建立在适用目标PHP version特性上。
