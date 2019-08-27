@@ -12,6 +12,8 @@ permalink: /about/
 
 #### **Github：[SewellDinG](https://github.com/SewellDinG)**
 
-#### **联系：printf YmlnZGVyLmRpbmdAZ21haWwuY29t | base64 -D**
+#### **Mail：bigder.ding#gmail.com**
 
-#### **知道这些就行了您嘞…**
+#### **WeChat：printf b29vb2RkbXg= | base64 -D**
+
+#### **Future：2021年研究生毕业**
