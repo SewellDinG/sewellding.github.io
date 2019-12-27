@@ -10,3 +10,5 @@ permalink: /link/
 - [0xdrop](https://drops.org.cn)：Web🐂
 - [hook](http://weeklyalgo.codes)：Bin🐂
 - [LittleGhost](https://blog.littleghost.ml)：臭弟弟🐂
+- [折戟](https://www.raosong.cc)：臭弟弟🐂
+- [T1ger](https://canbaoafeizai.github.io/)：臭弟弟🐂
