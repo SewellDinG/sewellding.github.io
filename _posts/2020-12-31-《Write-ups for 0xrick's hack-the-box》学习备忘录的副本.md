@@ -5,8 +5,6 @@ description: ""
 keywords: ""
 ---
 
-## 《Write-ups for 0xrick's Hack The Box》学习备忘录
-
 Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categories/hack-the-box/)
 
 ### 一、AI
