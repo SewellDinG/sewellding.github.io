@@ -67,7 +67,7 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 
 - Nmap：-sC和-sV倒不如直接使用-A，DNS、路由等信息也加入识别。
 - 信息泄露：在厂商的授权测试中，巧用Github搜索可能会得到意外的代码信息。
-- 文件定位：Windows上传某一文件却不知上传路径时，可将文件命名一特殊名，利用`dir /s/b filename*`快速定位；Linux则可以利用grep。
+- 文件定位：Windows下使用findstr，`findstr /si password *.xml *.ini *.txt`，查看后缀名文件中含有password关键字的文件；使用dir，`dir /b/s config.*`，查看当前目录所有config.为前缀的文件。Linux下对应grep和find。
 - 数据库：若环境支持PHP，可以利用adminer，支持MySQL, MariaDB, PostgreSQL, SQLite, MS SQL, Oracle, SimpleDB, Elasticsearch, MongoDB。
 - URL格式：`postgres://user:pass@host.com:5432/path?k=v#f`，包含了模式（协议）、验证信息、主机、端口、路径、查询参数和查询片段。注意：`@`和`#`。
 - 二进制程序：在逆向程序前可先使用关键字进行strings匹配。
