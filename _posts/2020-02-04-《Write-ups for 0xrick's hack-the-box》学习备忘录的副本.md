@@ -94,3 +94,24 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 - 信息泄露：常用的版本控制工具除了Git还有SVN；利用公开的代码库搜索可能会有意外发现，可以使用[searchcode](https://searchcode.com)搜索来自Github, Bitbucket, Google Code, Codeplex, Sourceforge, Fedora Project, GitLab等开源仓库的代码内容。
 - 环境分析：Linux下可以通过查看etc下的release文件快速判断，`cat /etc/*release`。Docker可以通过查看网络接口来简单判断，`ip a`。
 - 文件查找：可以使用`ls -lat`按时间顺序来查看当前目录下的文件。
+
+### 五、Smasher2
+
+环境概述：Linux、Insane、50'、01 Jun 2019
+
+渗透流程：Nmap -> DNS -> Web Enumeration -> auth.py: Analysis -> session.so: Analysis –> Authentication Bypass -> WAF Bypass –> RCE –> Shell as dzonerzy –> Root Flag -> dhid.ko: Enumeration -> dhid.ko: Analysis -> dhid.ko: Exploitation –> Root Shell –> Root Flag
+
+知识点：
+
+- DNS：通过Nmap发现服务器开启了53/tcp DNS服务，使用dig利用域传送漏洞，`dig axfr smasher2.htb @10.10.10.135`。
+- 文件对比：使用diff，`diff getinternalusr getinternalpwd`。
+- Bypass：使用单引号，`'w'g'e't 'h't't'p':'/'/'1'0'.'1'0'.'x'x'.'x'x'/'t'e's't'`。
+- Linux登陆：使用SSH公私钥，将公钥上传至~下的.ssh目录，命名为authorization_keys并赋予600权限，`~/.ssh/authorized_keys`，`chmod 600 ~/.ssh/authorized_keys`。 
+- 信息搜集：查看各类服务的日志记录，`/var/log/`。
+- 后半部分涉及到逆向和PWN知识。
+
+思考：
+
+- 域传送：区域传输（Zone transfer）为了给同域下的DNS Server做负载均衡，管理员若配置不当可导致跨域传输，泄露域内DNS记录，如未公开的子域名等。
+- 域传送漏洞：前提是获取目标Server使用的NS（Name Server），使用dig，`dig +nostats +nocomments +nocmd NS smasher2.htb`；Windows下可使用nslookup交互式界面，指定NS，`server 10.10.10.135`，列出DNS记录，`ls -d smasher2.htb`。
+- DNS：标准服务须同时开启53/tcp、53/udp。递归解析时使用53/udp；区域传输因需要可靠传输必须使用53/tcp。
