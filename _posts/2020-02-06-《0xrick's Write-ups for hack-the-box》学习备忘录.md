@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 《Write-ups for 0xrick's hack-the-box》学习备忘录
+title: 《0xrick's Write-ups for hack-the-box》学习备忘录
 description: ""
 keywords: ""
 ---
