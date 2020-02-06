@@ -140,3 +140,24 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 - CSRF token：作者到这还没有登陆系统，token对于爆破无影响，直接抓包爆破即可。
 - Bypass Exec：Linux环境下，除了`${IFS}`可代替空格外，还有`<>`重定向符、` {,}`格式包裹，参考我的博客总结[Some-tricks-of-Linux-in-CTF](https://ai-sewell.me/2017/Some-tricks-of-Linux-in-CTF)。
 - Linux提权：文中提到利用拥有suid权限的可执行程序来提权，使用find，`find / -user root -perm -4000 -print 2>/dev/null`，可参考[Linux利用SUID权限提权例子]([https://ai-sewell.me/2018/Linux-%E5%88%A9%E7%94%A8-SUID%E6%9D%83%E9%99%90-%E6%8F%90%E6%9D%83%E4%BE%8B%E5%AD%90/](https://ai-sewell.me/2018/Linux-利用-SUID权限-提权例子/))；有哪些程序可用来提权，可以利用[gtfobins](https://gtfobins.github.io/)工具快速判断。
+
+### 七、Heist
+
+环境概述：Windows、Easy、20'、10 Aug 2019
+
+渗透流程：Nmap -> Web Enumeration -> Enumerating Users –> Shell as Chase –> User Flag -> Administrator Password from Firefox Process Dump –> Shell as Administrator –> Root Flag
+
+知识点：
+
+- SMB：测试是否允许匿名登陆，使用smbclient，`smbclient --list //heist.htb/ -U ""`。
+- 密码破解：Cisco Hash在线[Cracker](https://www.ifm.net.nz/cookbooks/passwordcracker.html)；由$组成的Hash使用john自动识别类型并破解，`john --wordlist=/usr/share/wordlists/rockyou.txt ./hash.txt `。
+- 信息搜集：将搜集到的Cisco用户名和密码，以及john破解出的密码进行排列组合，成功登陆smb；使用[impacket](https://github.com/SecureAuthCorp/impacket)项目的[lookupsid.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/lookupsid.py)脚本获取目标用户信息，`lookupsid.py hazard:stealth1agent@heist.htb`；使用[ evil-winrm](https://github.com/Hackplayers/evil-winrm)，Windows远程管理（WinRM）Shell登陆chase用户终端。
+- 进程内存：使用[procdump.exe](https://docs.microsoft.com/en-us/sysinternals/downloads/procdump)将firefox进程内存dump，`.\procdump64.exe -accepteula -ma 4980`。
+- 寻找关键字：使用[strings.exe](https://docs.microsoft.com/en-us/sysinternals/downloads/strings)，`cmd /c "strings64.exe -accepteula firefox.exe_191129_211531.dmp > firefox.exe_191129_211531.txt"`，与Linux下strings无异；使用findstr寻找password，`findstr "password" ./firefox.exe_191129_211531.txt`。
+
+思考：
+
+- 密码破解：Hash类型的密码破解除了john，还有hashcat，Kali下均默认自带。常见的Hydra是爆破神器，专门爆破在线服务。
+- 信息搜集：是渗透测试的重中之重，过程中遇见的用户、密码及可疑字符串都需添加至爆破字典中，便于后渗透使用。
+- 进程内存：遇到可疑的进程，可将其内存dump下来进行字符串匹配，没准有意外发现。微软官方出品的procdump.exe，天生白名单，在实战环境中也很好用。
+- 总的来说，本环境较多的是考验信息搜集的能力，将一些将看似无关紧要的信息进行排列组合，从而拿到flag。
