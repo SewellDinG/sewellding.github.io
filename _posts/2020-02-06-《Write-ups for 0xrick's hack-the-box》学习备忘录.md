@@ -17,7 +17,7 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 
 - Nmap：-sC等价为--script=default，默认调取已知端口的脚本，输出相应服务的详细信息。
 - 目录枚举：使用gobuster，`gobuster dir -u http://ai.htb/ -w /usr/share/wordlists/dirb/common.txt -x php`
-- 文字转MP3：[https://ttsmp3.com](https://ttsmp3.com)，有中国女声，可读中文。
+- 文字转MP3：使用[ttsmp3](https://ttsmp3.com)，有中国女声，可读中文。
 - MP3转WAV：使用ffmpeg，`ffmpeg -i test.mp3 test.wav`。
 - Linux提权：使用`ps aux`查看root权限起的服务，使用`netstat -ntlp`查看敏感端口；在Github上使用关键词搜索exp。
 
@@ -120,7 +120,7 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 
 环境概述：Linux、Medium、30'、14 Sep 2019
 
-渗透流程：Nmap -> Web Enumeration -> RCE | WAF Bypass –> Shell as www-data -> Screen 4.5.0 –> Root Shell –> User & Root Flags
+渗透流程：Nmap -> Web Enumeration -> RCE -> WAF Bypass –> Shell as www-data -> Screen 4.5.0 –> Root Shell –> User & Root Flags
 
 知识点：
 
@@ -136,7 +136,7 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 思考：
 
 - Web认证：Apache Basic Auth会在请求头中添加Authorization字段，内容为`用户名:密码`的base64编码，`Authorization: Basic YWRtaW46YWRtaW4=`；使用Burpsuite爆破，在intruder模块选中base64字段，payload type选择Custom iterator，分别设置`用户名字典、:、密码字典`。
-- Bypass Auth：参考[绕过Web授权和认证之篡改HTTP请求](https://sobug.com/article/detail/25)。
+- Bypass Auth：参考绕过Web授权和认证之[篡改HTTP请求](https://sobug.com/article/detail/25)。
 - CSRF token：作者到这还没有登陆系统，token对于爆破无影响，直接抓包爆破即可。
 - Bypass Exec：Linux环境下，除了`${IFS}`可代替空格外，还有`<>`重定向符、` {,}`格式包裹，参考我的博客总结[Some-tricks-of-Linux-in-CTF](https://ai-sewell.me/2017/Some-tricks-of-Linux-in-CTF)。
 - Linux提权：文中提到利用拥有suid权限的可执行程序来提权，使用find，`find / -user root -perm -4000 -print 2>/dev/null`，可参考[Linux利用SUID权限提权例子]([https://ai-sewell.me/2018/Linux-%E5%88%A9%E7%94%A8-SUID%E6%9D%83%E9%99%90-%E6%8F%90%E6%9D%83%E4%BE%8B%E5%AD%90/](https://ai-sewell.me/2018/Linux-利用-SUID权限-提权例子/))；有哪些程序可用来提权，可以利用[gtfobins](https://gtfobins.github.io/)工具快速判断。
