@@ -115,3 +115,28 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 - 域传送：区域传输（Zone transfer）为了给同域下的DNS Server做负载均衡，管理员若配置不当可导致跨域传输，泄露域内DNS记录，如未公开的子域名等。
 - 域传送漏洞：前提是获取目标Server使用的NS（Name Server），使用dig，`dig +nostats +nocomments +nocmd NS smasher2.htb`；Windows下可使用nslookup交互式界面，指定NS，`server 10.10.10.135`，列出DNS记录，`ls -d smasher2.htb`。
 - DNS：标准服务须同时开启53/tcp、53/udp。递归解析时使用53/udp；区域传输因需要可靠传输必须使用53/tcp。
+
+### 六、Wall
+
+环境概述：Linux、Medium、30'、14 Sep 2019
+
+渗透流程：Nmap -> Web Enumeration -> RCE | WAF Bypass –> Shell as www-data -> Screen 4.5.0 –> Root Shell –> User & Root Flags
+
+知识点：
+
+- 目录枚举：80/tcp端口是Apache Web服务，index为默认页面，这时使用gobuster枚举目录，有意外收获。
+- Web认证：使用了Apache默认的认证方式，并进行了爆破。
+- Bypass Auth：GET请求monitoring目录触发Apache认证，将请求更改为POST绕过认证。
+- 密码爆破：使用wfuzz，`wfuzz -c -X POST -d "username=admin&password=FUZZ" -w ./darkweb2017-top10000.txt http://wall.htb/centreon/api/index.php?action=authenticate`。
+- Getshell：Centreon使用的版本19.04，使用searchsploit寻找EXP，`searchsploit centreon`，发现存在RCE。
+- Bypass Exec：根据公开的EXP，反向追溯漏洞触发点，手工测试发现将空格替换成`${IFS}`，绕过WAF。
+- Linux提权：发现screen工具拥有suid权限；编译exp，`gcc -fPIC -shared -ldl -o libhax.so libhax.c`。
+- umask：`umask 000`，对所有位都不mask（掩码），新建文件和文件夹均为默认权限，并无存在意义。
+
+思考：
+
+- Web认证：Apache Basic Auth会在请求头中添加Authorization字段，内容为`用户名:密码`的base64编码，`Authorization: Basic YWRtaW46YWRtaW4=`；使用Burpsuite爆破，在intruder模块选中base64字段，payload type选择Custom iterator，分别设置`用户名字典、:、密码字典`。
+- Bypass Auth：参考[绕过Web授权和认证之篡改HTTP请求](https://sobug.com/article/detail/25)。
+- CSRF token：作者到这还没有登陆系统，token对于爆破无影响，直接抓包爆破即可。
+- Bypass Exec：Linux环境下，除了`${IFS}`可代替空格外，还有`<>`重定向符、` {,}`格式包裹，参考我的博客总结[Some-tricks-of-Linux-in-CTF](https://ai-sewell.me/2017/Some-tricks-of-Linux-in-CTF)。
+- Linux提权：文中提到利用拥有suid权限的可执行程序来提权，使用find，`find / -user root -perm -4000 -print 2>/dev/null`，可参考[Linux利用SUID权限提权例子]([https://ai-sewell.me/2018/Linux-%E5%88%A9%E7%94%A8-SUID%E6%9D%83%E9%99%90-%E6%8F%90%E6%9D%83%E4%BE%8B%E5%AD%90/](https://ai-sewell.me/2018/Linux-利用-SUID权限-提权例子/))；有哪些程序可用来提权，可以利用[gtfobins](https://gtfobins.github.io/)工具快速判断。
