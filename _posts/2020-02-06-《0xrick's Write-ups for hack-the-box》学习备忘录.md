@@ -161,3 +161,32 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 - 信息搜集：是渗透测试的重中之重，过程中遇见的用户、密码及可疑字符串都需添加至爆破字典中，便于后渗透使用。
 - 进程内存：遇到可疑的进程，可将其内存dump下来进行字符串匹配，没准有意外发现。微软官方出品的procdump.exe，天生白名单，在实战环境中也很好用。
 - 总的来说，本环境较多的是考验信息搜集的能力，将一些将看似无关紧要的信息进行排列组合，从而拿到flag。
+
+### 八、Chainsaw
+
+环境概述：Linux、Hard、40'、15 Jun 2019
+
+渗透流程：Nmap -> FTP -> WeaponizedPing: Analysis -> WeaponizedPing: Interaction -> WeaponizedPing: Exploitation -> ipfs –> SSH as bobby –> User Flag -> ChainsawClub: Analysis -> ChainsawClub: Exploitation -> Slack Space –> Root Flag
+
+知识点：
+
+- Nmap：使用-sC参数测试出21/tcp FTP服务允许匿名登陆，并列出了当前目录下的文件。
+- FTP：kali下使用ftp访问，`ftp host`；将远程机器上的当前目录下的所有文件下载到本地，`mget *`。
+- Nmap：全端口扫描，`nmap -p- -T5 chainsaw.htb --max-retries 1 -o nmapfull`；指定端口扫描，`nmap -p 9810 -sV -sT -sC -o nmap9810 chainsaw.htb `。
+- 智能合约：Nmap发现9810端口是基于HTTP协议的JSON-RPC服务，使用Python的[web3.py](https://web3py.readthedocs.io/en/stable/index.html)连接以太坊智能合约并与之交互；**与智能合约交互需要获得合约地址和ABI（Application Binary Interface）**；使用[solidity IDE](http://remix.hubwiz.com/)编译合约内容获取ABI，这里作者使用的官方在线IDE测试失败，故使用国内的一款；ABI除了编译合约获取，也可以直接从泄露的JSON-RFC获取。
+- echo：将文件内容打印输出为一行，echo -n \`cat file\`。
+- IPFS：星际文件系统（InterPlanetary File System）是一个旨在创建持久且分布式存储和共享文件的网络传输协议，在IPFS网络中的节点将构成一个分布式文件系统；获取本地引用，`ipfs refs local`；查看指定引用系统的文件名，`ipfs ls systemhash`；获取文件内容，`ipfs get filehash`。
+- John：可以利用John自带的[ssh2john.py](/usr/share/john/ssh2john.py)将SSH的私钥装换成John可识别的hash，并利用John破解密码。
+- 端口转发：使用SSH，`ssh -L 63991:127.0.0.1:63991 -i bobby.key.enc bobby@chainsaw.htb`，可以加个-N参数，仅仅用来转发并处于等待状态。
+- 数据隐写：Slack space隐写，`bmap --mode slack root.txt --verbose`。
+
+思考：
+
+- FTP：匿名登陆常见弱口令，`anonymous:空`、`ftp:ftp`、`user:pass`。
+- 以太坊：以太坊是一个运行智能合约的分布式平台。以太坊类比操作系统，智能合约类比应用。
+- 智能合约：智能合约被编译为以太坊虚拟机字节码存储在以太坊的区块链上，通过网络中的每个以太坊节点运行EVM（Ethereum Virtual Machine，以太坊虚拟机）实现并执行指令。如果说比特币是二维世界的话，那么以太坊就是三维世界，可以实现无数个不同的二维世界。传统Web服务的后端业务作为只能合约在以太坊上运行。
+- EML格式：是微软为Outlook和Outlook Express开发的文件格式；是将邮件归档后生成的文件，保留着原来的HTML格式和标题。
+- Linux登陆：使用私钥登陆服务端仍然要输密码，网上多是说由于服务端文件权限配置问题，各种600、700权限设置，天花乱坠，其实这里还可能是客户端问题。不管是使用ssh-copy-id，`ssh-copy-id -i id_rsa_mac kali@172.16.58.129`，还是直接创建.ssh目录并写入authorized_keys文件，`mkdir .ssh; vim authorized_keys`，默认服务端的权限配置都是已经配好了的，无需更改，因为这里只要求authorized_keys文件的其他组O没有写权限-w即可。至于客户端问题，需要使用-vvT参数输出debug log来观察，`ssh -vvT kali@172.16.58.129`。e.g 我本地是配合config文件使用SSH的，生成的服务器私钥文件名并不为默认id_rsa，log中提示SSH已遍历了一些默认的私钥地址，但并无此私钥，因此需要-i指定私钥位置，或在config中设置服务器连接配置。
+- John：默认自带一些服务秘钥转HASH的脚本，kali的在/usr/share/john目录下。
+- SSH代理：也可以利用SSH设置代理，`ssh -D 1080 -fN -i bobby.key.enc bobby@chainsaw.htb`
+- 这是一个关于智能合约的漏洞环境，从智能合约的定义、编写、编译、部署到交互，可以拓展学习不少有趣的东西。
