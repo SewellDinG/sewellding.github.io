@@ -120,3 +120,24 @@ php.png
 思考：
 
 - ELK：数据从获取->检索->分析->可视化全过程，[demo](https://ai-sewell.me/2019/WeChat-Message-Analyzer)。
+
+### 十二、Safe
+
+环境概述：Linux、Easy、20'、27 Jul 2019
+
+渗透流程：Nmap -> Web Enumeration -> myapp: Analysis -> myapp: Exploitation -> Cracking the KeePass Database –> Root Shell
+
+知识点：
+
+- 信息搜集：80/tcp碰到Apache默认页面很讨厌，除了搜集sub directories, vhosts, other ports etc，留意默认页面的注释发现线索。CTF-style...
+- 缓冲区溢出：使用nc与服务交互，`nc safe.htb 1337`；输入长字符测试使程序崩溃，发生缓冲区溢出，提示Segmentation fault。
+- PWN：使用`checksec`检查程序，Finding the Offset -> ROP Chain。
+- 文件下载：使用scp，`scp -i ./id_rsa user@safe.htb:/home/user/MyPasswords.kdbx ./MyPasswords.kdbx `。
+- 密码破解：kdbx文件是通过KeePass密码安全创建的数据文件，使用john的keepass2john脚本将（图片key+kdbx数据文件）转为口令hash并使用john破解，`keepass2john -k IMG_0547.JPG ./MyPasswords.kdbx > hash.txt`，`john --wordlist=./rockyou-70.txt ./hash.txt`，得到Master Password。
+- KeePass：使用Master Password和图片Key登陆数据库.kdbx。 
+- 用户切换：使用su，默认切换到root用户，输入KeePass泄露的密码登陆。
+
+思考：
+
+- 信息搜集：默认情况下，Nmap用指定的协议对端口1-1024以及`nmap-services` 文件中列出的更高的端口在扫描，可以使用`-p-`来扫1-65535端口。
+- KeePass：一款开源（开源最大的优势就是即使将来有一天开发者不更新了也会有其他开发者接手）的密码管理器。单数据库文件有点类似常见的Access数据库（.mdb）、SQLite3数据库（.sqlite）。
