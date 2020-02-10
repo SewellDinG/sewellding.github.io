@@ -102,3 +102,21 @@ php.png
 - MySQL：version>4.1密码为*+40位hash，Windows的存在于`path\data\mysql\user.MYD`文件中，可直接打开并拼接40位hash来获取，Linux同理在`/var/lib/mysql/mysql/user.MYD`；利用MySQL写入要留意secure_file_priv参数，是用来限制LOAD DATA, SELECT ... OUTFILE, LOAD_FILE()传到哪个指定目录的。
 - Linux：systemctl命令启动的服务都是由service配置文件启动的，enable都是link的配置文件；`/etc/passwd`是用户标记文件，每行格式为`用户名:口令:用户标识号:组标识号:注释性描述:主目录:登录Shell`，由于passwd文件任何人可读，即系统默认用户将口令存放到/etc/shadow，在passwd文件的口令字段中只存放一个特殊的字符，例如x或者\*。
 - 添加用户：一般在Webshell中，passwd这种交互式的命令无法执行，可以使用chpasswd，`echo 'sewellding:123456' | chpasswd`进行非交互式的添加账户，或者还是使用passwd，`echo "123456" | passwd --stdin 'sewellding'`。
+
+### 十一、Haystack
+
+环境概述：Linux、Easy、20'、29 Jun 2019
+
+渗透流程：Nmap -> Web Enumeration -> Steg in needle.jpg, SSH creds from elasticsearch, User Flag -> Shell as kibana -> Exploiting logstash, Root Shell
+
+知识点：
+
+- 图片隐写：使用strings，`strings needle.jpg`，发现base64 code并解码，`echo bGEgYWd1amEgZW4gZWwgcGFqYXIgZXMgImNsYXZlIg== | base64 -d`，是Spanish西班牙语，转为英语，`la aguja en el pajar es "clave" => the needle in the haystack is "key"`。
+- Elasticsearch：默认端口9200，RESTful API，搜索clave关键词，`curl http://haystack.htb:9200/_search?q=clave`，发现SSH普通用户密码。
+- 进程监控：[pspy](https://github.com/DominicBreuker/pspy)是一个命令行工具，它可以在没有Root权限的情况下监控Linux进程，黑客可以利用它来查看其他用户的计划任务(cron job)等，在CTF中可快速搜集系统信息；发现logstash是root权限启动的。
+- Kibana：默认端口5601，可视化数据，利用本地文件包含漏洞getshell。
+- Logstash：默认端口9600，数据处理，由于配置接受`type => "execute"`的文件，造成RCE。
+
+思考：
+
+- ELK：数据从获取->检索->分析->可视化全过程，[demo](https://ai-sewell.me/2019/WeChat-Message-Analyzer)。
