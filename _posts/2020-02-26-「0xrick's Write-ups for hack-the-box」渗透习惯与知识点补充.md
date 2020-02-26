@@ -1,13 +1,15 @@
 ---
 layout: post
-title: 《0xrick's Write-ups for hack-the-box》学习备忘录
+title: 「0xrick's Write-ups for hack-the-box」渗透习惯与知识点补充
 description: ""
 keywords: ""
 ---
 
-国外Ahmed Hesham师傅记录了50多个Hack The Box环境的渗透Writeup，很有学习价值，其中的渗透流程十分清晰，也有规律可循，可以看出师傅的渗透习惯，这里我将其中的知识点和自己的思考分享给大家。
+国外Ahmed Hesham师傅记录了50多个Hack The Box环境的渗透Writeup，很有学习价值，虽不是实战，但其中的渗透流程十分清晰，也有规律可循，可以看出师傅的渗透习惯，这里我将其中的知识点和自己的思考分享给大家。
 
 Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categories/hack-the-box/)
+
+同时推荐klionsecs师傅的[红方人员作战执行手册](https://github.com/klionsec/RedTeamer)，针对日常 "红队" 场景，进行了一次相对全面完整的实战攻击利用技术提炼汇总，实战流程更为清晰。养成一个良好的渗透习惯，是一个安全研究人员的基本功，结合两位师傅的分享，学习后收益颇丰。
 
 ### 一、AI
 
