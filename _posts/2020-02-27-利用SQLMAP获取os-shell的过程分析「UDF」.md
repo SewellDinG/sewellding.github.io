@@ -155,7 +155,7 @@ mysqld(16261)─┬─ping(16416)
 
 ### 参考
 
-官方防范建议：[security-against-attack](https://dev.mysql.com/doc/refman/8.0/en/security-against-attack.html)
+1、官方防范建议：[security-against-attack](https://dev.mysql.com/doc/refman/8.0/en/security-against-attack.html)
 
 ```
 Never run the MySQL server as the Unix root user. This is extremely dangerous, because any user with the FILE privilege is able to cause the server to create files as root (for example, ~root/.bashrc). To prevent this, mysqld refuses to run as root unless that is specified explicitly using the --user=root option.
