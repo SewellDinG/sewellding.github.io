@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 利用SQLMAP实现MySQL --os-shell的过程分析
+title: 利用SQLMAP获取os-shell的过程分析「UDF」
 description: ""
 keywords: ""
 ---
