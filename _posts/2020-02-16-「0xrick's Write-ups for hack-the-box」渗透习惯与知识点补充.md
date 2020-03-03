@@ -190,7 +190,7 @@ Paper：[Write-ups for 0xrick's hack-the-box](https://0xrick.github.io/categorie
 - 以太坊：以太坊是一个运行智能合约的分布式平台。以太坊类比操作系统，智能合约类比应用。
 - 智能合约：智能合约被编译为以太坊虚拟机字节码存储在以太坊的区块链上，通过网络中的每个以太坊节点运行EVM（Ethereum Virtual Machine，以太坊虚拟机）实现并执行指令。如果说比特币是二维世界的话，那么以太坊就是三维世界，可以实现无数个不同的二维世界。传统Web服务的后端业务作为只能合约在以太坊上运行。
 - EML格式：是微软为Outlook和Outlook Express开发的文件格式；是将邮件归档后生成的文件，保留着原来的HTML格式和标题。
-- Linux登陆：使用私钥登陆服务端仍然要输密码，网上多是说由于服务端文件权限配置问题，各种600、700权限设置，天花乱坠，其实这里还可能是客户端问题。不管是使用ssh-copy-id，`ssh-copy-id -i id_rsa_mac kali@172.16.58.129`，还是直接创建.ssh目录并写入authorized_keys文件，`mkdir .ssh; vim authorized_keys`，默认服务端的权限配置都是已经配好了的，无需更改，因为这里只要求authorized_keys文件的其他组O没有写权限-w即可。至于客户端问题，需要使用-vvT参数输出debug log来观察，`ssh -vvT kali@172.16.58.129`。e.g 我本地是配合config文件使用SSH的，生成的服务器私钥文件名并不为默认id_rsa，log中提示SSH已遍历了一些默认的私钥地址，但并无此私钥，因此需要-i指定私钥位置，或在config中设置服务器连接配置。
+- Linux登陆：使用私钥登陆服务端仍然要输密码，网上多是说由于服务端文件权限配置问题，各种600、700权限设置，天花乱坠，其实这里还可能是客户端问题。不管是使用ssh-copy-id，`ssh-copy-id -i id_rsa_mac kali@172.16.58.129`，还是直接创建.ssh目录并写入authorized_keys文件，`mkdir .ssh; vim authorized_keys`，默认服务端的权限配置都是已经配好了的，无需更改，因为这里**只要求authorized_keys文件的所属组G、其他组O没有写权限-w，.ssh目录同样即可。**至于客户端问题，需要使用-vvT参数输出debug log来观察，`ssh -vvT kali@172.16.58.129`。e.g 我本地是配合config文件使用SSH的，生成的服务器私钥文件名并不为默认id_rsa，log中提示SSH已遍历了一些默认的私钥地址，但并无此私钥，因此需要-i指定私钥位置，或在config中设置服务器连接配置。
 - John：默认自带一些服务秘钥转HASH的脚本，kali的在/usr/share/john目录下。
 - SSH代理：也可以利用SSH设置代理，`ssh -D 1080 -fN -i bobby.key.enc bobby@chainsaw.htb`
 - 这是一个关于智能合约的漏洞环境，从智能合约的定义、编写、编译、部署到交互，可以拓展学习不少有趣的东西。
