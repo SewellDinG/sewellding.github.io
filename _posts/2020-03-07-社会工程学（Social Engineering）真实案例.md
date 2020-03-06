@@ -13,7 +13,7 @@ keywords: ""
 
 火绒社工黑客：[火绒社工黑客.webarchive](https://ai-sewell.me/assets/images/2020-03-07/火绒社工黑客.webarchive)
 
-<object data="https://ai-sewell.me/assets/images/2020-03-07/SocialEngineeringDemo.pdf" type="application/pdf" width="900px" height="900px">
+<object data="https://ai-sewell.me/assets/images/2020-03-07/SocialEngineeringDemo.pdf" type="application/pdf" width="800px" height="800px">
     <embed src="https://ai-sewell.me/assets/images/2020-03-07/SocialEngineeringDemo.pdf">
         <p>This browser does not support PDFs. Please download the PDF to view it: <a href="https://ai-sewell.me/assets/images/2020-03-07/SocialEngineeringDemo.pdf">Download PDF</a>.</p>
     </embed>
