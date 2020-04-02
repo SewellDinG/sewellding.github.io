@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 逗比小工具「fileMonitor、Aria2、ePing」
+title: 逗比小工具「fileMonitor、Aria2、ePing、rshell」
 description: ""
 keywords: ""
 ---
@@ -117,3 +117,11 @@ round-trip min/avg/max/stddev = 54.314/92.387/165.996/43.425 ms
 ```
 
 将编译好的程序移动至环境变量中的程序中，或设置别名`alias ping='/path/eping'`来使用。建议使用前者，命名为eping。
+
+## 4、rshell
+
+输入IP与Port，自动生成Reverse Shell Cheatsheet。
+
+代码地址：[https://github.com/SewellDinG/ReverseShellCheatsheet](https://github.com/SewellDinG/ReverseShellCheatsheet)
+
+![rshell](https://github.com/SewellDinG/ReverseShellCheatsheet/raw/master/demo.png)
