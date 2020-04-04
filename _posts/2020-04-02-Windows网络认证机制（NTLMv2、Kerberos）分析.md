@@ -24,3 +24,9 @@ NTLMv2：远程登录SMB共享目录（从本机抓取）
 Kerberos：登陆域内主机（从域控抓取）
 
 [Kerberos_logon.pcap](/assets/images/2020-04-02/Kerberos_logon.pcap)
+
+## 攻击手法
+
+攻击NTLM、Kerberos
+
+![NTLM_Kerberos_attack.jpg](/assets/images/2020-04-02/NTLM_Kerberos_attack.jpg)
