@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 逗比小工具「fileMonitor、Aria2、ePing、rshell」
+title: 逗比小工具「fileMonitor、Aria2、ePing、rshell、mysql_monitor」
 description: ""
 keywords: ""
 ---
@@ -125,3 +125,13 @@ round-trip min/avg/max/stddev = 54.314/92.387/165.996/43.425 ms
 代码地址：[https://github.com/SewellDinG/ReverseShellCheatsheet](https://github.com/SewellDinG/ReverseShellCheatsheet)
 
 ![rshell](https://github.com/SewellDinG/ReverseShellCheatsheet/raw/master/demo.png)
+
+## 5、mysql_monitor
+
+按提示要求输入MySQL数据库连接配置。
+
+自动设置`SET GLOBAL general_log=on`和`SET GLOBAL log_output='table'`，即将SQL log写入mysql.general_log表，监听此表并实时输出。
+
+代码地址：[https://github.com/SewellDinG/MySQLMonitor](https://github.com/SewellDinG/MySQLMonitor)
+
+[![demo](https://github.com/SewellDinG/MySQLMonitor/raw/master/demo.png)](https://github.com/SewellDinG/MySQLMonitor/blob/master/demo.png)
