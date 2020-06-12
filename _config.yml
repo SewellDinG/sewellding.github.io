@@ -4,7 +4,7 @@ title: "SewellDinG"
 title2: "老锥" 
 description: ""
 keywords: ""
-url: https://ai-sewell.me # site url
+url: https://getshell.icu # site url
 baseurl: "" # apply repo name if use it under gh-pages branch
 # baseurl: null # apply null if repo name is something like username.github.io
 
@@ -34,7 +34,7 @@ author:
   bio      : ""
   thumb    : /images/author.png
   email    : bigder.ding@gmail.com
-  url      : https://ai-sewell.me
+  url      : https://getshell.icu
   github   : https://github.com/SewellDinG
   twitter  : https://twitter.com/SewellDinG
 
