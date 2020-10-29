@@ -14,5 +14,3 @@ permalink: /about/
 
 #### **WeChat：printf b29vb2RkbXg= | base64 -D**
 
-#### **Future：2021年研究生毕业，望各大公司收留 :)**
-
