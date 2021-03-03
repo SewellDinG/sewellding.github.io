@@ -32,16 +32,16 @@ author:
   footer   : "菜的不要不要的了╥﹏╥"
   job      : "XDU"
   bio      : ""
-  thumb    : /images/author.png
+  thumb    : 
   email    : bigder.ding@gmail.com
   url      : https://getshell.icu
   github   : https://github.com/SewellDinG
-  twitter  : https://twitter.com/SewellDinG
+  twitter  : https://twitter.com/AlphaZackD
 
 # social settings
 og_locale: "en_US"
 twitter_card: "summary_large_image"
-twitter_site: "@SewellDinG"
+twitter_site: "@AlphaZackD"
 
 plugins:
   - bourbon
