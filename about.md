@@ -12,5 +12,5 @@ permalink: /about/
 
 #### **Mail：bigder.ding#gmail.com**
 
-#### **WeChat：printf b29vb2RkbXg= | base64 -D**
+#### **WeChat：printf QWxwaGFaYWNr | base64 -D**
 
